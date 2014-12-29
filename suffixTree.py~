@@ -1,0 +1,66 @@
+import sys
+
+class SuffixNode:
+
+    def __init__(self, suffix_link = None):
+        self.children = {}
+        if suffix_link is not None:
+            self.suffix_link = suffix_link
+        else:
+            self.suffix_link = self
+
+    def add_link( self, c, v):
+        self.children[ c ] = v
+
+
+
+def build_suffix_tree( s ):
+
+    assert len(s) > 0
+
+    Root = SuffixNode()
+    Longest = SuffixNode( suffix_link = Root )
+    Root.add_link( s[0], Longest )
+
+    for c in s[1:]:
+        Current = Longest
+        Previous = None
+        while c not in Current.children:
+
+            r1 = SuffixNode()
+            Current.add_link(c, r1)
+
+            if Previous is not None:
+                Previous.suffix_link = r1
+
+            Previous = r1
+            Current = Current.suffix_link
+
+        if Current is Root:
+            Previous.suffix_link = Root
+        else:
+            Previous.suffix_link = Current.children[ c ]
+
+        Longest = Longest.children[ c ]
+
+    return Root
+
+
+def prune_generalized_tree( Tree ):
+
+    Tree.children = Tree
+
+    
+
+
+def get_common_strings_table( s_list )
+
+    combined = '$'.join( s_list )
+    Tree = build_suffix_tree( combined )
+
+
+
+if __name__=='__main__':
+
+    tb = get_common_strings_table( ["mial", "raz", "tata", "grata", "fiata"] )
+
